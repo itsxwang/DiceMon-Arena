@@ -4,10 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    <link rel="shortcut icon" href="pokeball.webp" type="image/x-icon">
+    <title>DiceMon Arena — Collection</title>
+    <link rel="shortcut icon" href="../Images/pokeball.webp" type="image/x-icon">
     <link rel="stylesheet" href="../styles/homeStyle1.css">
     <link rel="stylesheet" href="../styles/homeStyle2.css">
+    <link rel="stylesheet" href="../styles/homeExtras.css">
 </head>
 
 <body>
@@ -19,20 +20,27 @@
                 <figure class="screen">
                     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png" alt="Pokemon Sprite"
                         class="pokemon-sprite" />
+                    <span class="screen-shiny" id="screenShiny" hidden>✦</span>
                 </figure>
+                <div class="screen-caption" id="screenCaption">Roll to discover</div>
                 <div class="screen-bottom">
                     <div class="light"></div>
                 </div>
             </div>
 
             <div class="controls">
-                <button class="roll_btn js-roll-btn" aria-label="Roll for Pokemon">
+                <button class="roll_btn js-roll-btn" aria-label="Roll for a DiceMon" title="Roll (R)">
                     <div class="middle-line"></div>
                     <span></span>
                 </button>
                 <div class="button-container">
-                    <a class="battle" href="./battlePage.html">Battle</a>
+                    <a class="battle" id="battleLink" href="./battlePage.html">Battle</a>
                 </div>
+                <button id="luckyRollBtn" class="lucky-roll-btn" type="button" title="Guaranteed strong DiceMon">
+                    <span>🍀 Lucky Roll</span>
+                    <small id="luckyCostLabel">120 🪙</small>
+                </button>
+                <p class="selected-hint" id="selectedHint">No fighter selected</p>
             </div>
         </section>
 
@@ -47,8 +55,9 @@
         <!-- Right Panel - Pokemon Grid -->
         <section class="grid-panel">
             <header class="grid-header">
+                <div class="trainer-hud" id="trainerHud"></div>
                 <div class="search-container">
-                    <input id="searchInput" type="text" class="search-input" placeholder="Search Pokemon...">
+                    <input id="searchInput" type="text" class="search-input" placeholder="Search name or type...">
                     <button class="search-btn" aria-label="Search">
                         <img src="../Images/searchIcon.png" alt="Search Icon" class="search-icon">
                     </button>
@@ -57,13 +66,15 @@
 
             <div class="grid-content">
                 <div class="pokemon-grid">
-                    <!-- Here Grid Items -->
+                    <!-- Grid items rendered by homeScript.js -->
                 </div>
             </div>
         </section>
     </main>
 
-    <script src="../js/homeScript.js"></script>
+    <div id="toastStack" class="toast-stack" aria-live="polite"></div>
+
+    <script type="module" src="../js/homeScript.js"></script>
 </body>
 
 </html>

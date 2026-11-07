@@ -1,0 +1,26 @@
+{
+  "name": "dicemon-arena",
+  "version": "1.0.0",
+  "description": "DiceMon Arena — a real-time multiplayer dice-battle game built on the PokeAPI.",
+  "private": true,
+  "main": "server/server.js",
+  "scripts": {
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start": "node server/server.js",
+    "test:ws": "node test/ws-smoke.js"
+  },
+  "keywords": [
+    "pokemon",
+    "dice",
+    "multiplayer",
+    "game"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0"
+  }
+}

@@ -1,0 +1,599 @@
+/* ==========================================================================
+   DiceMon Arena — home page additions
+   Trainer HUD, collection cards, selection state, toasts.
+   ========================================================================== */
+
+.trainer-hud {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.4rem;
+    margin-bottom: 0.55rem;
+}
+
+.hud-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 0.55rem;
+    border-radius: 0.6rem;
+    border: 1px solid rgba(67, 176, 71, 0.22);
+    background: linear-gradient(145deg, rgba(67, 176, 71, 0.12), rgba(0, 0, 0, 0.18));
+    min-width: 0;
+}
+
+.hud-chip .hud-icon {
+    font-size: 0.95rem;
+    line-height: 1;
+}
+
+.hud-chip .hud-body {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.12;
+    min-width: 0;
+}
+
+.hud-chip b {
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.hud-chip small {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.58rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   Gameboy screen caption
+   -------------------------------------------------------------------------- */
+
+.screen-container {
+    padding-bottom: 14px;
+}
+
+.screen-caption {
+    margin-top: 0.75rem;
+    text-align: center;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.3s ease;
+}
+
+.screen-caption.shiny {
+    color: var(--gb-gold);
+    text-shadow: 0 0 12px rgba(255, 215, 0, 0.65);
+}
+
+.screen-shiny {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    z-index: 3;
+    font-size: 1.5rem;
+    color: var(--gb-gold);
+    text-shadow: 0 0 14px rgba(255, 215, 0, 0.9);
+    animation: shinyTwinkle 1.6s ease-in-out infinite;
+}
+
+.screen.shiny-screen {
+    box-shadow:
+        inset 0 0 20px rgba(0, 0, 0, 0.2),
+        0 0 22px rgba(255, 215, 0, 0.45);
+}
+
+@keyframes shinyTwinkle {
+    0%, 100% { opacity: 0.55; transform: scale(0.85) rotate(0deg); }
+    50% { opacity: 1; transform: scale(1.2) rotate(16deg); }
+}
+
+/* --------------------------------------------------------------------------
+   Selection hint on the Gameboy panel
+   -------------------------------------------------------------------------- */
+
+.selected-hint {
+    margin: 0;
+    max-width: 100%;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.48);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.selected-hint b {
+    color: var(--gb-gold);
+    font-weight: 700;
+}
+
+.battle.disabled {
+    opacity: 0.45;
+    filter: grayscale(0.5);
+}
+
+/* --------------------------------------------------------------------------
+   Lucky Roll (coin sink)
+   -------------------------------------------------------------------------- */
+
+.lucky-roll-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 1.1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 215, 0, 0.4);
+    background: linear-gradient(145deg, rgba(255, 215, 0, 0.16), rgba(0, 0, 0, 0.28));
+    color: #ffe98c;
+    font-family: inherit;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, opacity 0.16s ease;
+}
+
+.lucky-roll-btn small {
+    padding: 0.16rem 0.45rem;
+    border-radius: 999px;
+    background: rgba(255, 215, 0, 0.16);
+    color: var(--gb-gold);
+    font-size: 0.62rem;
+    letter-spacing: 0.04em;
+}
+
+.lucky-roll-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    border-color: rgba(255, 215, 0, 0.8);
+    box-shadow: 0 8px 22px rgba(255, 183, 0, 0.25);
+}
+
+.lucky-roll-btn:active:not(:disabled) {
+    transform: translateY(0) scale(0.97);
+}
+
+.lucky-roll-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    filter: grayscale(0.35);
+}
+
+.lucky-roll-btn.rolling {
+    animation: luckyPulse 0.7s ease infinite alternate;
+}
+
+@keyframes luckyPulse {
+    from { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.35); }
+    to { box-shadow: 0 0 0 7px rgba(255, 215, 0, 0); }
+}
+
+/* --------------------------------------------------------------------------
+   Collection cards
+   -------------------------------------------------------------------------- */
+
+.pokemon-grid {
+    gap: 1rem;
+}
+
+.grid-item {
+    --rarity: #8f8f8f;
+    max-height: none;
+    min-height: 0;
+    padding: 0.7rem;
+    border: 2px solid rgba(255, 255, 255, 0.09);
+    border-radius: 0.9rem;
+    background:
+        radial-gradient(120% 80% at 50% 0%, rgba(255, 255, 255, 0.08), transparent 55%),
+        linear-gradient(150deg, #262626, #191919);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+    overflow: hidden;
+    outline: none;
+}
+
+.grid-item::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 3px;
+    background: var(--rarity);
+    opacity: 0.9;
+    z-index: 4;
+}
+
+.grid-item:hover {
+    transform: translateY(-4px) scale(1.008);
+    border-color: var(--rarity);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.42);
+}
+
+.grid-item:focus-visible {
+    border-color: var(--rarity);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+}
+
+.grid-item.selected {
+    border-color: var(--gb-gold);
+    box-shadow:
+        0 0 0 2px rgba(255, 215, 0, 0.28),
+        0 16px 34px rgba(0, 0, 0, 0.4),
+        0 0 26px rgba(255, 183, 0, 0.16);
+}
+
+.grid-item.selected::before {
+    background: linear-gradient(90deg, var(--gb-gold), var(--gb-gold-dark));
+    height: 4px;
+}
+
+.grid-item.rarity-uncommon { --rarity: #5fcf63; }
+.grid-item.rarity-rare { --rarity: #4da6ff; }
+.grid-item.rarity-epic { --rarity: #a772ff; }
+.grid-item.rarity-legendary { --rarity: #ffd75e; }
+.grid-item.rarity-common { --rarity: #9a9a9a; }
+
+.grid-item.shiny {
+    background:
+        radial-gradient(120% 80% at 50% 0%, rgba(255, 215, 0, 0.16), transparent 58%),
+        linear-gradient(150deg, #2d2718, #191919);
+}
+
+.pokemon-image-container {
+    max-height: none;
+    aspect-ratio: 1.18;
+    background:
+        radial-gradient(circle at 50% 62%, rgba(255, 255, 255, 0.12), transparent 65%),
+        linear-gradient(145deg, #333, #222);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    margin-bottom: 0.6rem;
+}
+
+.grid-item.rarity-legendary .pokemon-image-container {
+    background:
+        radial-gradient(circle at 50% 62%, rgba(255, 215, 0, 0.18), transparent 62%),
+        linear-gradient(145deg, #34302a, #222);
+}
+
+.pokemon-image {
+    position: relative;
+    z-index: 2;
+}
+
+.card-select {
+    position: absolute;
+    top: 0.45rem;
+    right: 0.45rem;
+    z-index: 5;
+    display: none;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.28rem 0.55rem;
+    border-radius: 0.4rem;
+    background: linear-gradient(145deg, var(--gb-gold), var(--gb-gold-dark));
+    color: #221703;
+    font-size: 0.58rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.grid-item.selected .card-select {
+    display: flex;
+}
+
+.card-shiny {
+    position: absolute;
+    left: 0.5rem;
+    top: 0.4rem;
+    z-index: 5;
+    font-size: 1.05rem;
+    color: var(--gb-gold);
+    text-shadow: 0 0 12px rgba(255, 215, 0, 0.9);
+    animation: shinyTwinkle 1.7s ease-in-out infinite;
+}
+
+.pokemon-info {
+    padding: 0.55rem;
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.card-identity {
+    min-width: 0;
+}
+
+.card-name {
+    margin: 0;
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: #fff;
+    text-transform: capitalize;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rarity-badge {
+    display: inline-block;
+    margin-top: 0.22rem;
+    padding: 0.12rem 0.4rem;
+    border-radius: 999px;
+    border: 1px solid var(--rarity);
+    color: var(--rarity);
+    font-size: 0.54rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.card-types {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.25rem;
+}
+
+.type-chip {
+    padding: 0.18rem 0.45rem;
+    border-radius: 999px;
+    font-size: 0.52rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #0b0b10;
+    background: #9b95b3;
+}
+
+.type-chip.type-normal { background: #b9b4a7; }
+.type-chip.type-fire { background: #ff8a4c; }
+.type-chip.type-water { background: #5fa8ff; }
+.type-chip.type-electric { background: #ffd84d; }
+.type-chip.type-grass { background: #67d67a; }
+.type-chip.type-ice { background: #8ee6ff; }
+.type-chip.type-fighting { background: #ff6b6b; }
+.type-chip.type-poison { background: #c98aff; }
+.type-chip.type-ground { background: #e6bd7a; }
+.type-chip.type-flying { background: #b6c7ff; }
+.type-chip.type-psychic { background: #ff8dbb; }
+.type-chip.type-bug { background: #b6d45a; }
+.type-chip.type-rock { background: #c9b27a; }
+.type-chip.type-ghost { background: #a08cff; }
+.type-chip.type-dragon { background: #8f8bff; }
+.type-chip.type-dark { background: #8b8199; color: #fff; }
+.type-chip.type-steel { background: #b9c4d6; }
+.type-chip.type-fairy { background: #ffb3e2; }
+
+.pokemon-stats {
+    gap: 0.35rem;
+    max-height: none;
+}
+
+.stat-row {
+    padding: 0.34rem 0.45rem;
+    border-radius: 0.32rem;
+    font-size: 0.68rem;
+}
+
+.stat-row .stat-label {
+    font-size: 0.62rem;
+    color: rgba(255, 255, 255, 0.55);
+}
+
+.stat-row .stat-value {
+    font-size: 0.7rem;
+}
+
+.card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-top: 0.55rem;
+    padding-top: 0.45rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.36);
+}
+
+.grid-item.selected .card-footer {
+    color: var(--gb-gold);
+}
+
+.card-footer .card-bst {
+    color: rgba(255, 255, 255, 0.55);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: none;
+}
+
+.grid-item.selected .card-footer .card-bst {
+    color: rgba(255, 215, 0, 0.7);
+}
+
+/* Existing stat row animations would replay on every render; keep them subtle. */
+.grid-item .stat-row {
+    animation-duration: 0.35s;
+}
+
+/* --------------------------------------------------------------------------
+   Empty state
+   -------------------------------------------------------------------------- */
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 2.4rem 1.2rem;
+    text-align: center;
+    border: 1px dashed rgba(67, 176, 71, 0.35);
+    border-radius: 0.9rem;
+    background: rgba(67, 176, 71, 0.05);
+    color: rgba(255, 255, 255, 0.62);
+}
+
+.empty-state .empty-icon {
+    font-size: 2.4rem;
+    animation: pulse 2.4s ease infinite;
+}
+
+.empty-state h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: #fff;
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    max-width: 24ch;
+}
+
+.empty-state button {
+    margin-top: 0.3rem;
+    padding: 0.65rem 1.2rem;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(145deg, var(--gb-gold), var(--gb-gold-dark));
+    color: #221703;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+.empty-state button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 183, 0, 0.3);
+}
+
+/* --------------------------------------------------------------------------
+   Toasts
+   -------------------------------------------------------------------------- */
+
+.toast-stack {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.6rem;
+    pointer-events: none;
+}
+
+.toast {
+    max-width: min(320px, calc(100vw - 36px));
+    padding: 0.85rem 1.1rem;
+    border-radius: 0.7rem;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(22, 22, 22, 0.97);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+    color: #f2f2f2;
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.45;
+    animation: toastSlideIn 0.3s cubic-bezier(0.2, 1.1, 0.3, 1) both;
+}
+
+.toast.error {
+    border-color: rgba(255, 86, 86, 0.55);
+    color: #ffc4c4;
+}
+
+.toast.good {
+    border-color: rgba(67, 176, 71, 0.55);
+    color: #c7f5c9;
+}
+
+.toast.gold {
+    border-color: rgba(255, 215, 0, 0.6);
+    color: #ffe98c;
+    background: linear-gradient(145deg, rgba(48, 40, 12, 0.98), rgba(22, 22, 22, 0.98));
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.55), 0 0 22px rgba(255, 215, 0, 0.18);
+}
+
+.toast.leaving {
+    animation: toastSlideOut 0.24s ease both;
+}
+
+@keyframes toastSlideIn {
+    from { opacity: 0; transform: translateX(16px) scale(0.96); }
+    to { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@keyframes toastSlideOut {
+    to { opacity: 0; transform: translateX(16px) scale(0.96); }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+
+@media screen and (max-width: 575px) {
+    .trainer-hud {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .hud-chip {
+        padding: 0.45rem 0.5rem;
+    }
+
+    .card-head {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .card-types {
+        justify-content: flex-start;
+    }
+
+    .toast-stack {
+        left: 12px;
+        right: 12px;
+        align-items: stretch;
+    }
+
+    .toast {
+        max-width: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card-shiny,
+    .screen-shiny,
+    .empty-state .empty-icon {
+        animation: none;
+    }
+}

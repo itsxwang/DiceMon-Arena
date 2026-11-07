@@ -3,66 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Battle Page</title>
-    <!-- Link to external CSS file -->
-    <link rel="stylesheet" href="../styles/battlePage.css">
-    <!-- Google Fonts -->
+    <title>DiceMon Arena — Battle</title>
+    <link rel="shortcut icon" href="../Images/pokeball.webp" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">  
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles/battlePage.css">
 </head>
 <body>
+<main class="arena-app">
 
-   
-    
-    <main class="battle-container">
-        <!-- Upper Section: Battle Arena -->
-        <section class="upperSection">
-
-            <a class="homeBtn" href="./homePage.html"><img class="closeIcon"  src="../Images/homeIcon.png" alt=""></a>
-
-            <div class="battleArena">
-
-                <!-- Pokemon 1 -->
-                <figure class="selectedPokemons selectedPokemon1">
-                    <img src="" alt="Pokemon1" />
-                </figure>
-
-                <!-- Battle Start Effect -->
-                <figure class="startBattleEffect">
-                    <img src="../Images/fire.gif"></img>
-                </figure>
-
-                <!-- Pokemon 2 -->
-                <figure class="selectedPokemons  selectedPokemon2">
-                    <img src="" alt="Pokemon2" />
-                </figure>
-
+    <header class="topbar">
+        <a class="brand" href="./homePage.html" aria-label="DiceMon Arena home">
+            <span class="brand-die">🎲</span>
+            <span class="brand-text">DiceMon <b>Arena</b></span>
+        </a>
+        <div class="topbar-right">
+            <span class="online-pill" id="onlinePill" title="Trainers connected">
+                <i></i><span id="onlineCount">0</span> online
+            </span>
+            <button id="soundBtn" class="icon-btn" type="button" title="Toggle sound">🔊</button>
+            <a class="icon-btn" href="./homePage.html" title="Back to collection">⌂</a>
         </div>
-            
-            <!-- Start Battle Button -->
-            <button class="battleStartBtn">Start</button>
-        </section>
-        
+    </header>
 
-
-        <!-- Below Section: Pokemon Selection and VS Text -->
-        <section class="belowSection">
-            <!-- Right Pokemon Selection -->
-            <section class="chooseRightPokemon">
-            </section>
-            
-            <!-- VS Text -->
-            <div class="bottomMiddleText">
-                <span class="vstext styleV">V</span>
-                <span class="vstext styleS">S</span>
+    <!-- ==================== LOBBY ==================== -->
+    <section id="lobbyScreen" class="screen lobby-screen">
+        <div class="lobby-hero">
+            <div class="lobby-title">
+                <p class="eyebrow">REAL-TIME DICE DUELS</p>
+                <h1>Roll. Strike.<br><span>Outsmart.</span></h1>
+                <p class="subtitle">Pick your DiceMon, read your rival, and make every roll count. Duel a trainer online or train against the wild BOT.</p>
+                <div class="feature-row">
+                    <span>⚡ Live PvP</span>
+                    <span>🎲 Dice crits</span>
+                    <span>🧠 Mind games</span>
+                    <span>🏆 Win streaks</span>
+                </div>
+                <div class="mini-stats" id="miniStats"></div>
             </div>
-            
-            <!-- Left Pokemon Selection -->
-            <section class="chooseLeftPokemon">
-            </section>
-        </section>
-    </main>
 
+            <div class="lobby-card">
+                <div class="card-topline">
+                    <span>YOUR FIGHTER</span>
+                    <a href="./homePage.html" class="text-btn">Change</a>
+                </div>
+                <div id="loadoutPreview" class="loadout-preview"></div>
+
+                <div class="name-row">
+                    <label for="trainerName">Trainer name</label>
+                    <input id="trainerName" maxlength="18" autocomplete="off" spellcheck="false" placeholder="Trainer">
+                </div>
+
+                <div class="lobby-buttons">
+                    <button id="quickMatchBtn" class="btn btn-primary" type="button">
+                        <span>⚡ Quick Match</span><small>Find a trainer now</small>
+                    </button>
+                    <div class="room-actions">
+                        <button id="createRoomBtn" class="btn btn-ghost" type="button">➕ Create Room</button>
+                        <div class="join-box">
+                            <input id="roomCode" maxlength="4" autocomplete="off" spellcheck="false" placeholder="CODE">
+                            <button id="joinRoomBtn" class="btn btn-ghost" type="button">Join</button>
+                        </div>
+                    </div>
+                    <button id="botBtn" class="btn btn-bot" type="button">🤖 Train vs Wild BOT</button>
+                </div>
+
+                <div id="lobbyStatus" class="lobby-status" hidden>
+                    <span class="status-dot"></span>
+                    <span id="lobbyStatusText">Searching for a rival…</span>
+                </div>
+                <button id="cancelQueueBtn" class="text-btn cancel-btn" type="button" hidden>Cancel search</button>
+
+                <div class="rules">
+                    <p><b>How to win:</b> drain your rival's HP. The faster DiceMon acts first each round.</p>
+                    <p><b>Strike</b> d6 · <b>Blast</b> d10 (2⚡) · <b>Guard</b> heals &amp; blocks 55% · <b>Focus</b> charges a 1.5× hit but leaves you exposed.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="roster-section">
+            <div class="roster-head">
+                <h2>Your Collection <span id="rosterCount">0</span></h2>
+                <a href="./homePage.html" class="text-btn">+ Roll more DiceMon</a>
+            </div>
+            <div id="rosterGrid" class="roster-grid"></div>
+            <p id="rosterEmpty" class="roster-empty" hidden>No DiceMon yet. <a href="./homePage.html">Roll your first one →</a></p>
+        </div>
+
+        <div id="roomBanner" class="room-banner" hidden>
+            <span>Share this room code</span>
+            <strong id="roomCodeDisplay">----</strong>
+            <button id="copyCodeBtn" class="text-btn" type="button">Copy code</button>
+            <button id="cancelRoomBtn" class="text-btn" type="button">Close room</button>
+        </div>
+    </section>
+
+    <!-- ==================== BATTLE ==================== -->
+    <section id="battleScreen" class="screen battle-screen" hidden>
+        <div class="battle-topline">
+            <div class="round-pill">ROUND <span id="roundNumber">1</span></div>
+            <div class="battle-mode" id="battleMode">QUICK MATCH</div>
+            <div class="turn-timer" title="Time left this round">
+                <div id="timerFill" class="timer-fill"></div>
+                <span id="timerText">30</span>
+            </div>
+        </div>
+
+        <div class="arena" id="arena">
+            <div class="fighter-panel fighter-you">
+                <div class="fighter-meta">
+                    <div class="fighter-name"><span id="youName">You</span><small id="youLevel">Lv.1</small></div>
+                    <div class="type-row" id="youTypes"></div>
+                </div>
+                <div class="hp-wrap">
+                    <div class="hp-bar"><div id="youHpFill" class="hp-fill"></div><span id="youHpText">--/--</span></div>
+                    <div class="energy-row" id="youEnergy"></div>
+                </div>
+                <div class="status-row" id="youStatus"></div>
+            </div>
+
+            <div class="arena-stage" id="arenaStage">
+                <div class="stage-grid"></div>
+                <div class="stage-glow"></div>
+                <div class="platform platform-you"></div>
+                <div class="platform platform-foe"></div>
+
+                <figure class="mon-figure mon-you" id="youFigure">
+                    <img id="youSprite" alt="Your DiceMon">
+                    <span class="shiny-star" id="youShiny" hidden>✦</span>
+                </figure>
+                <figure class="mon-figure mon-foe" id="foeFigure">
+                    <img id="foeSprite" alt="Rival DiceMon">
+                    <span class="shiny-star" id="foeShiny" hidden>✦</span>
+                </figure>
+
+                <div class="bubble bubble-you" id="youBubble" hidden></div>
+                <div class="bubble bubble-foe" id="foeBubble" hidden></div>
+
+                <div id="fxLayer" class="fx-layer"></div>
+
+                <div class="dice-stage" id="diceStage" hidden>
+                    <div class="dice" id="dice"><span id="diceFace">?</span></div>
+                    <div class="dice-caption" id="diceCaption"></div>
+                </div>
+
+                <div class="round-flash" id="roundFlash" hidden></div>
+            </div>
+
+            <div class="fighter-panel fighter-foe">
+                <div class="fighter-meta">
+                    <div class="fighter-name"><span id="foeName">Rival</span><small id="foeLevel">Lv.1</small></div>
+                    <div class="type-row" id="foeTypes"></div>
+                </div>
+                <div class="hp-wrap">
+                    <div class="hp-bar"><div id="foeHpFill" class="hp-fill"></div><span id="foeHpText">--/--</span></div>
+                    <div class="energy-row" id="foeEnergy"></div>
+                </div>
+                <div class="status-row" id="foeStatus"></div>
+            </div>
+        </div>
+
+        <div class="battle-bottom">
+            <div class="action-panel">
+                <div class="action-head">
+                    <span id="actionPrompt">Choose your move</span>
+                    <span class="keys-hint">keys 1–4</span>
+                </div>
+                <div class="action-grid" id="actionGrid">
+                    <button class="action-btn action-strike" data-action="strike" type="button">
+                        <span class="action-icon">⚔️</span>
+                        <span class="action-name">Strike</span>
+                        <small>d6 · reliable</small>
+                        <kbd>1</kbd>
+                    </button>
+                    <button class="action-btn action-blast" data-action="blast" type="button">
+                        <span class="action-icon">🔥</span>
+                        <span class="action-name">Blast</span>
+                        <small>d10 · 2⚡</small>
+                        <kbd>2</kbd>
+                    </button>
+                    <button class="action-btn action-guard" data-action="guard" type="button">
+                        <span class="action-icon">🛡️</span>
+                        <span class="action-name">Guard</span>
+                        <small>block 55% · heal</small>
+                        <kbd>3</kbd>
+                    </button>
+                    <button class="action-btn action-focus" data-action="focus" type="button">
+                        <span class="action-icon">🧠</span>
+                        <span class="action-name">Focus</span>
+                        <small>1.5× next hit</small>
+                        <kbd>4</kbd>
+                    </button>
+                </div>
+                <div class="emote-row" id="emoteRow">
+                    <span>Emote</span>
+                    <button data-emote="nice" type="button" title="Nice!">😎</button>
+                    <button data-emote="wow" type="button" title="Wow!">😱</button>
+                    <button data-emote="fire" type="button" title="On fire!">🔥</button>
+                    <button data-emote="oops" type="button" title="Oops!">😅</button>
+                    <button data-emote="gg" type="button" title="Good game">👏</button>
+                </div>
+                <button id="forfeitBtn" class="text-btn forfeit-btn" type="button">Forfeit battle</button>
+            </div>
+
+            <div class="log-panel">
+                <div class="log-head"><span>Battle log</span><span id="turnStat">—</span></div>
+                <div id="battleLog" class="battle-log" aria-live="polite"></div>
+            </div>
+        </div>
+
+        <div id="waitingOverlay" class="waiting-overlay" hidden>
+            <div class="waiting-card">
+                <div class="spinner"></div>
+                <p id="waitingText">Waiting for your rival…</p>
+                <small id="waitingSub">Move locked in</small>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== RESULT ==================== -->
+    <div id="resultOverlay" class="result-overlay" hidden>
+        <div class="result-card" id="resultCard">
+            <div class="result-glow" id="resultGlow"></div>
+            <p class="eyebrow" id="resultEyebrow">BATTLE COMPLETE</p>
+            <h2 id="resultTitle">Victory!</h2>
+            <p id="resultSubtitle"></p>
+            <div class="reward-row" id="rewardRow"></div>
+            <div class="result-stats" id="resultStats"></div>
+            <div class="result-actions">
+                <button id="rematchBtn" class="btn btn-primary" type="button">Rematch</button>
+                <button id="lobbyBtn" class="btn btn-ghost" type="button">Back to Lobby</button>
+            </div>
+            <p class="rematch-status" id="rematchStatus" hidden></p>
+        </div>
+    </div>
+
+    <canvas id="confettiCanvas" class="confetti-canvas" hidden></canvas>
+    <div id="toastStack" class="toast-stack" aria-live="polite"></div>
+</main>
+
+<script type="module" src="../js/battlePage.js"></script>
 </body>
 </html>
